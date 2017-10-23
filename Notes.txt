@@ -1,0 +1,69 @@
+These are the notable changes that I did to the project.
+- Reorganized the project into API, Model, Service, Repository, Entity
+- Renamed main folder and solution file from refactor_me to Products
+- Moved logic from Models/Products to Services
+- Moved connectionstring to Web.Config and created a helper class to get a connection
+- Moved all sql to stored procedures
+- Use of using when creating sql connections
+- Added default GUID to table definitions using NEWSEQUENTIALID() to move GUID generation to DB
+- Added foreign key reference to Product from ProductOptions with cascade delete
+- Stored all sql scripts under Database folder inside the main folder
+- Added Autofac for dependency injection
+- Added AutoMapper for mapping/transferring values between objects
+- Added basic logging for unhandled exceptions using NLog and exception filter
+- Added configurable versioning using Microsoft.AspNet.WebApi.Versioning nuget package
+- Added dummy version 2 controller which should be accessible by appending ?api-version=2.0 to url
+- Added some model validation
+- Added some checking using filters
+- Use of async and await
+- Removed default route and used attribute routing
+- Setup unit test project
+
+Based on what I have done so far, I think these are the areas for improvement.
+- Better test coverage.
+- Model validation, espcially with invalid GUIDs.
+- API documentation page/resource
+- Better code documentation
+- Define dto for update and create to have better control on which properties can be updated
+- Use a standard Error payload or content. Example:
+{
+  "errors": [
+   {
+    "userMessage": "Sorry, the requested resource does not exist",
+    "internalMessage": "No car found in the database",
+    "code": 12345,
+    "moreInfo": "http://www.products.com/docs/api/v1.0/errors/12345"
+   }
+  ]
+} 
+- Authentication and Authorization using tokens
+- Put back XML formatter and let client decide using Accept and Content Type
+- Use links in payload for better navigation. HATEOAS - Hypermedia as the Engine of Application State
+{
+  "Id": "01234567-89ab-cdef-0123-456789abcdef",
+  "Name": "Product name",
+  "Description": "Product description",
+  "Price": 123.45,
+  "DeliveryPrice": 12.34
+  "Options": [
+    {
+      "Id": "01234567-89ab-cdef-0123-456789abcdef",
+      "Name": "Product name",
+      "Description": "Product description"
+      "Link" : {
+        "rel": "self",
+        "href": "/products/01234567-89ab-cdef-0123-456789abcdef/options/01234567-89ab-cdef-0123-456789abcdef"
+      }
+    }
+  ]
+}
+- More filtering (ei. in Options name)
+- Sorting of results
+/products?sort=+price,+name
+- Field selections 
+/products/?fields=name,description
+- Paging by adding and implementing offset and limit parameters
+/products/?offset=0&limit=20
+- When paging add X-Total-Count to the header
+- Add Link header for the first, prev, next, last page URL
+- X-HTTP-Method-Override for people behind proxies that support only a subset (post and get) of the http verbs

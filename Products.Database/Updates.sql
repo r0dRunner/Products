@@ -1,0 +1,8 @@
+ALTER TABLE [dbo].[Product]
+    ADD CONSTRAINT DF_ProductId DEFAULT NEWSEQUENTIALID() FOR Id
+
+ALTER TABLE [dbo].[ProductOption]
+    ADD CONSTRAINT DF_ProductOptionId DEFAULT NEWSEQUENTIALID() FOR Id
+
+ALTER TABLE [dbo].[ProductOption] WITH NOCHECK
+    ADD CONSTRAINT [FK_ProductOption_Product] FOREIGN KEY ([ProductId]) REFERENCES [dbo].[Product] ([Id]) ON DELETE CASCADE;
